@@ -1,3 +1,4 @@
+/* c program of factorial */
 #!/bin/bash
 echo -n "Enter a number: "
 read num                     
