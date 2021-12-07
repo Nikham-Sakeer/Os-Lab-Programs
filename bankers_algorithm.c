@@ -1,165 +1,161 @@
+
 #include <stdio.h>
 
-#include <conio.h>
 
 int main()
 
 {
 
- int max[10][10], alloc[10][10], avail[10], completed[10], safeSequence[10];
+	int max[10][10], alloc[10][10], avail[10], completed[10], safeSequence[10];
 
- int n, m, i, j,k,flag,process, count;
+	int n, m, i, j,k,flag,process, count;
 
- count = 0;
+	count = 0;
 
- printf("\n\t...Banker's Algorithm...\n");
+	printf("\n\t...Banker's Algorithm...\n");
 
- printf("\nEnter the no of processes : ");
+	printf("\nEnter the no of processes : ");
 
- scanf("%d", &n);
+	scanf("%d", &n);
 
-for(i = 0; i< n; i++)
+	for(i = 0; i< n; i++)
 
- completed[i] = 0;
+	completed[i] = 0;
 
- printf("\nEnter the no of resources : ");
+	printf("\nEnter the no of resources : ");
 
- scanf("%d", &m);
+	scanf("%d", &m);
 
- printf("\n\nEnter the allocation for each process : ");
+	printf("\n\nEnter the allocation for each process : ");
 
- for(i = 0; i < n; i++)
+	for(i = 0; i < n; i++)
 
- {
+	{
 
- printf("\nFor process %d : ",i + 1);
+		printf("\nFor process %d : ",i + 1);
 
- for(j = 0; j < m; j++)
+		for(j = 0; j < m; j++)
 
- scanf("%d", &alloc[i][j]);
+		scanf("%d", &alloc[i][j]);
 
- }
+	}
 
- printf("\n\nEnter the Max Matrix for each process : ");
+	printf("\n\nEnter the Max Matrix for each process : ");
 
- for(i = 0; i < n; i++)
+	for(i = 0; i < n; i++)
+	{
+		printf("\nFor process %d : ", i + 1);
 
- {
+		for(j = 0; j < m; j++)
 
- printf("\nFor process %d : ", i + 1);
+		scanf("%d", &max[i][j]);
+	}
 
- for(j = 0; j < m; j++)
+	printf("\n\nEnter the Available Resources : ");
 
- scanf("%d", &max[i][j]);
+	for(i = 0; i < m; i++)
 
- }
+	scanf("%d", &avail[i]);
 
- printf("\n\nEnter the Available Resources : ");
+	int f[n];
 
- for(i = 0; i < m; i++)
+	for (k = 0; k < n; k++) {
+		f[k] = 0;
+	}
 
- scanf("%d", &avail[i]);
+	int need[n][m];
 
- int f[n];
+	for (i = 0; i < n; i++) {
 
- for (k = 0; k < n; k++) {
+		for (j = 0; j < m; j++)
 
- f[k] = 0;
-   }
+		need[i][j] = max[i][j] - alloc[i][j];
 
- int need[n][m];
+	}
 
- for (i = 0; i < n; i++) {
+	printf("\n Max matrix:\tAllocation matrix:\n");
 
- for (j = 0; j < m; j++)
+	for(i = 0; i < n; i++)
 
- need[i][j] = max[i][j] - alloc[i][j];
+	{
 
- }
+		for( j = 0; j < m; j++)
 
- printf("\n Max matrix:\tAllocation matrix:\n");
+		printf("%d ", max[i][j]);
 
- for(i = 0; i < n; i++)
+		printf("\t\t");
 
- {
+		for( j = 0; j < m; j++)
 
- for( j = 0; j < m; j++)
+		printf("%d ", alloc[i][j]);
 
- printf("%d ", max[i][j]);
+		printf("\n");
 
- printf("\t\t");
+	}
 
- for( j = 0; j < m; j++)
+	printf("\n \t...Need Matrix...\n\n");
 
- printf("%d ", alloc[i][j]);
+	for(i = 0; i < n; i++) {
 
- printf("\n");
+		printf("Need[P%d] \t",i+1);
 
- }
+		for(j = 0; j < m; j++) {
 
- printf("\n \t...Need Matrix...\n\n");
+			printf("%d ",need[i][j] );
 
- for(i = 0; i < n; i++) {
+		}
 
- printf("Need[P%d] \t",i+1);
+		printf("\n");
 
- for(j = 0; j < m; j++) {
+	}
 
- printf("%d ",need[i][j] );
+	int y = 0;
 
- }
+	for (k = 0; k < n; k++) {
 
- printf("\n");
+		for (i = 0; i < n; i++) {
 
- }
+			if (f[i] == 0) {
+				int flag = 0;
 
- int y = 0;
+				for (j = 0; j < m; j++) {
 
- for (k = 0; k < n; k++) {
+					if (need[i][j] > avail[j]) {
 
- for (i = 0; i < n; i++) {
+						flag = 1;
 
- if (f[i] == 0) {
-   int flag = 0;
+						break;
 
- for (j = 0; j < m; j++) {
+					}
 
- if (need[i][j] > avail[j]) {
+				}
 
- flag = 1;
+				if (flag == 0) {
 
- break;
+					safeSequence[count++] = i+1;
 
- }
+					for (y = 0; y < m; y++)
 
- }
+					avail[y] += alloc[i][y];
 
- if (flag == 0) {
+					f[i] = 1;
 
- safeSequence[count++] = i+1;
+				}
 
- for (y = 0; y < m; y++)
+			}
 
- avail[y] += alloc[i][y];
+		}
 
- f[i] = 1;
+	}
 
- }
+	printf("\n\nFollowing is the SAFE Sequence\n");
 
- }
+	for (i = 0; i < n-1 ; i++)
 
- }
+	printf(" P%d ->", safeSequence[i]);
 
- }
+	printf("P%d", safeSequence[n-1]);
 
- printf("\n\nFollowing is the SAFE Sequence\n");
-
- for (i = 0; i < n-1 ; i++)
-
- printf(" P%d ->", safeSequence[i]);
-
- printf("P%d", safeSequence[n-1]);
-
- return (0);
+	return (0);
 
 }
